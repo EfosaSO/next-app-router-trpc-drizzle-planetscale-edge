@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
+
 import Image from "next/image";
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { H1, H3, H6, P } from "~/components/typography";
 import { Button } from "~/components/ui/button";
 import { api } from "~/lib/api/server";
@@ -60,9 +62,12 @@ export default async function Page({
                   href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${foundVoid.location.placeId}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="a"
+                  className="group"
                 >
-                  <address>{foundVoid.location?.address}</address>
+                  <section className="flex items-center gap-2">
+                    <address>{foundVoid.location?.address}</address>
+                    <ExternalLink className="w-4 h-4 group-hover:scale-110 custom-ease" />
+                  </section>
                 </a>
               ) : (
                 <address>{foundVoid.location?.address}</address>
