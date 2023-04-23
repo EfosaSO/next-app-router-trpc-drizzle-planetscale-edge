@@ -1,7 +1,13 @@
 import * as React from "react";
 import { cn } from "~/lib/utils";
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+import { FieldProps } from "./field";
+
+export type InputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "name" | "onChange" | "onBlur" | "value"
+> &
+  Pick<FieldProps<any>, "name">;
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, ...props }, ref) => {

@@ -1,0 +1,161 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String
+  email     String
+  photo     String?
+  customers Customer[]
+}
+
+model Customer {
+  id                String         @id @default(cuid())
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  userId            String         @unique
+  paymentProviderId String?
+  paymentProvider   String?
+  paymentMethod     Json?
+  subscriptions     Subscription[]
+  organisation      Organisation?
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Organisation {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  ownerId   String     @unique
+  name      String
+  slug      String     @unique
+  customer  Customer   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  locations Location[]
+
+  @@index([ownerId])
+}
+
+model Location {
+  id             String       @id @default(cuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organisationId String
+  name           String
+  placeId        String?
+  address        String?
+  postcode       String?
+  email          String?
+  phone          String?
+  organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  voids          Void[]
+
+  @@index([organisationId])
+}
+
+model Void {
+  id           String                @id @default(cuid())
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  locationId   String
+  fulfilled    Boolean               @default(false)
+  name         String
+  slug         String
+  description  String
+  password     String?
+  location     Location              @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  requirements RequirementsOnVoids[]
+
+  @@index([locationId])
+}
+
+model Requirement {
+  id        String                @id @default(cuid())
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  title     String
+  voids     RequirementsOnVoids[]
+}
+
+model RequirementsOnVoids {
+  requirement   Requirement @relation(fields: [requirementId], references: [id], onDelete: Cascade)
+  requirementId String
+  void          Void        @relation(fields: [voidId], references: [id], onDelete: Cascade)
+  voidId        String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+
+  @@id([voidId, requirementId])
+  @@index([voidId])
+  @@index([requirementId])
+}
+
+model SubscriptionProduct {
+  id          String              @id @default(cuid())
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  active      Boolean             @default(false)
+  title       String
+  description String
+  image       String?
+  metadata    Json?
+  prices      SubscriptionPrice[]
+}
+
+model SubscriptionPrice {
+  id              String              @id @default(cuid())
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  active          Boolean             @default(false)
+  description     String
+  unitAmount      BigInt
+  currency        String              @db.VarChar(3)
+  pricingType     String?
+  interval        String
+  intervalCount   Int
+  trialPeriodDays Int
+  metadata        Json?
+  productId       String
+  product         SubscriptionProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  subscriptions   Subscription[]
+
+  @@index([productId])
+}
+
+model Subscription {
+  id                 String            @id @default(cuid())
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  status             String
+  metadata           Json?
+  quantity           Int
+  cancelAtPeriodEnd  Boolean
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  endedAt            DateTime?
+  cancelAt           DateTime?
+  canceledAt         DateTime?
+  trialStart         DateTime?
+  trialEnd           DateTime?
+  customerId         String
+  priceId            String
+  customer           Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  price              SubscriptionPrice @relation(fields: [priceId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([priceId])
+}

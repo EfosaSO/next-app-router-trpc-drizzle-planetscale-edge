@@ -14,7 +14,7 @@ export const siteConfig: SiteConfig = {
     "T3 stack using app router with TRPC on edge, Drizzle Orm with PlanetScale serverless driver",
   url: "https://giga-stack.vercel.app",
   links: {
-    twitter: "https://twitter.com/o_ploskovytskyy",
+    twitter: "https://twitter.com/EfosaSO",
     github:
       "https://github.com/ploskovytskyy/next-app-router-trpc-drizzle-planetscale-edge",
   },

@@ -5,7 +5,7 @@ import { env } from "~/env.mjs";
 import { createContextInner } from "~/server/api/context";
 import { appRouter } from "~/server/api/root";
 
-export default function handler(req: NextRequest) {
+function handler(req: NextRequest) {
   return fetchRequestHandler({
     req,
     endpoint: "/api/trpc",
@@ -28,4 +28,8 @@ export default function handler(req: NextRequest) {
   });
 }
 
-export const runtime = "experimental-edge";
+export const GET = handler;
+export const POST = handler;
+export const DELETE = handler;
+export const PUT = handler;
+export const PATCH = handler;

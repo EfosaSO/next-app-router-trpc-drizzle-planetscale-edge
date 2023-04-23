@@ -1,8 +1,17 @@
-import { exampleRouter } from "~/server/api/routers/example";
+import { voidsRouter } from "~/server/api/routers/voids";
 import { createTRPCRouter } from "~/server/api/trpc";
 
+// import connectDB from "../prisma";
+import { locationsRouter } from "./routers/locations";
+import { organisationsRouter } from "./routers/organisations";
+
+// Connect to Prisma
+// connectDB();
+
 export const appRouter = createTRPCRouter({
-  example: exampleRouter,
+  voids: voidsRouter,
+  organisations: organisationsRouter,
+  locations: locationsRouter,
 });
 
 // export type definition of API

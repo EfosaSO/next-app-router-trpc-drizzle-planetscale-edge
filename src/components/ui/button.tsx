@@ -1,4 +1,5 @@
 import * as React from "react";
+import Link, { LinkProps } from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
 import { cn } from "~/lib/utils";
@@ -33,26 +34,73 @@ const buttonVariants = cva(
   }
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  loading?: boolean;
-  loadingText?: string;
+type AnchorProps = React.AnchorHTMLAttributes<HTMLElement> & LinkProps<{}>;
+type ButtonProps = React.ButtonHTMLAttributes<HTMLElement>;
+
+export type MyButtonProps = AnchorProps | ButtonProps;
+
+export type BaseButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants> &
+  MyButtonProps & {
+    anchor?: boolean;
+    loading?: boolean;
+    loadingText?: string;
+    icon?: React.ElementType;
+  };
+
+function isAnchor(props: MyButtonProps): props is AnchorProps {
+  return (props as AnchorProps).href !== undefined;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
   (
-    { className, variant, size, loading, loadingText, children, ...props },
+    {
+      icon: Icon,
+      anchor,
+      className,
+      variant,
+      size,
+      loading,
+      loadingText,
+      children,
+      ...props
+    },
     ref
   ) => {
-    return (
-      <button
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      >
+    const classes = cn(buttonVariants({ variant, size, className }));
+    const renderChildren = () => (
+      <>
+        {Icon && <Icon className="w-5 h-5" />}
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {loading && loadingText ? loadingText : children}
+      </>
+    );
+    if (isAnchor(props)) {
+      if (anchor) {
+        return (
+          <a
+            className={classes}
+            {...props}
+            ref={ref as React.ForwardedRef<HTMLAnchorElement>}
+          >
+            {renderChildren()}
+          </a>
+        );
+      }
+      return (
+        <Link
+          className={classes}
+          {...props}
+          // @ts-ignore
+          ref={ref as React.ForwardedRef<HTMLAnchorElement>}
+        >
+          {renderChildren()}
+        </Link>
+      );
+    }
+    return (
+      <button className={classes} ref={ref} type="button" {...props}>
+        {renderChildren()}
       </button>
     );
   }

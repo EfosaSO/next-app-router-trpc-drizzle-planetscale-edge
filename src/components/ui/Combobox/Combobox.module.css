@@ -1,0 +1,48 @@
+.combobox {
+  @apply flex h-10 w-full rounded-md border border-stone-300 bg-transparent px-3 py-2 text-sm placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-stone-700 dark:text-stone-50 dark:focus:ring-stone-400 dark:focus:ring-offset-stone-900;
+}
+
+.label {
+  @apply flex flex-col gap-0.5 text-sm text-[color:var(--text-lighter)];
+}
+
+.loading {
+  @apply relative;
+}
+
+.spinner {
+  @apply absolute right-2 top-1/2 -translate-y-1/2;
+}
+
+.popover {
+  @apply relative z-50 flex max-h-[min(var(--popover-available-height,300px),300px)] flex-col overflow-auto overscroll-contain rounded-md border border-solid border-[color:var(--border)] bg-[color:var(--background-secondary)] p-0.5 text-[color:var(--text)] shadow-lg outline-none outline-offset-2;
+}
+
+.combobox-item {
+  @apply bg-gray-950;
+  display: flex;
+  cursor: default;
+  scroll-margin: 0.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  outline: none !important;
+}
+
+.combobox-item:hover {
+  background-color: hsl(204 100% 80% / 0.4);
+}
+
+.combobox-item[data-active-item] {
+  background-color: hsl(204 100% 40%);
+  color: hsl(204 20% 100%);
+}
+
+.dark .combobox-item:hover {
+  background-color: hsl(204 100% 40% / 0.25);
+}
+
+.dark .combobox-item[data-active-item] {
+  background-color: hsl(204 100% 40%);
+}

@@ -1,13 +1,14 @@
-import { Inter } from "next/font/google";
-
-import "~/styles/globals.css";
+import { Nunito } from "next/font/google";
+import Link from "next/link";
+import { UserButton, currentUser } from "@clerk/nextjs/app-beta";
+import { Home } from "lucide-react";
 import { siteConfig } from "~/config/site";
 import { cn } from "~/lib/utils";
 
+import "~/styles/globals.css";
 import { ClientProviders } from "./client-providers";
 
-const fontSans = Inter({
-  weight: ["400", "500", "600", "800", "900"],
+const fontSans = Nunito({
   subsets: ["latin"],
 });
 
@@ -65,18 +66,35 @@ export const metadata = {
 
 type RootLayoutProps = PropsWithChildren;
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const user = await currentUser();
   return (
-    <html lang="en">
+    <html lang="en" className={fontSans.className}>
       <head />
-      <ClientProviders>
-        <body
-          className={cn(
-            "antialiased bg-white text-black dark:bg-stone-900 dark:text-white",
-            fontSans.className
-          )}
-        >
-          <main className="min-h-screen">{children}</main>
+      <body
+        className={cn(
+          "antialiased bg-white text-black dark:bg-stone-900 dark:text-white"
+        )}
+      >
+        <ClientProviders>
+          <main className="min-h-screen">
+            <section className="fixed z-50 w-full bg-white text-black dark:bg-stone-900 dark:text-white">
+              <section className="container">
+                <div className=" flex items-center justify-between py-4 border-b dark:border-b-stone-700">
+                  <Link
+                    href={user ? "/dashboard" : "/"}
+                    className="hover:text-rose-400 underline font-semibold"
+                  >
+                    <Home />
+                  </Link>
+                  <div className="flex gap-6 items-center">
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
+                </div>
+              </section>
+            </section>
+            <section className="container pt-20">{children}</section>
+          </main>
           <footer className="bg-gradient-to-l from-rose-100 to-teal-100 dark:from-rose-100/80 dark:to-teal-100/80 text-stone-900">
             <div className="grid md:flex container md:items-center md:justify-between gap-2 md:gap-4 py-3 md:py-6 text-sm">
               <p>
@@ -87,24 +105,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   rel="noreferrer"
                   className="font-semibold underline underline-offset-4"
                 >
-                  @o_ploskovytskyy
-                </a>
-              </p>
-              <p>
-                The source code is available on{" "}
-                <a
-                  href={siteConfig.links.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-semibold underline underline-offset-4"
-                >
-                  GitHub
+                  @EfosaSO
                 </a>
               </p>
             </div>
           </footer>
-        </body>
-      </ClientProviders>
+        </ClientProviders>
+      </body>
     </html>
   );
 }

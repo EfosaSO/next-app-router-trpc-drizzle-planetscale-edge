@@ -1,7 +1,13 @@
 import * as React from "react";
 import { cn } from "~/lib/utils";
 
-export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+import { FieldProps } from "./field";
+
+export type TextareaProps = Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  "name" | "onChange" | "onBlur" | "value"
+> &
+  Pick<FieldProps<any>, "name">;
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, ...props }, ref) => {

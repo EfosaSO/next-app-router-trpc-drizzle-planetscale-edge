@@ -46,12 +46,21 @@ export function H4({ children, className }: PropsWithChildrenAndClassName) {
   );
 }
 
-export function P({ children, className }: PropsWithChildrenAndClassName) {
+export function H6({ children, className }: PropsWithChildrenAndClassName) {
   return (
-    <p className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}>
+    <h6
+      className={cn(
+        "scroll-m-20 text-base font-bold tracking-tight",
+        className
+      )}
+    >
       {children}
-    </p>
+    </h6>
   );
+}
+
+export function P({ children, className }: PropsWithChildrenAndClassName) {
+  return <p className={cn("leading-7", className)}>{children}</p>;
 }
 
 export function Lead({ children, className }: PropsWithChildrenAndClassName) {

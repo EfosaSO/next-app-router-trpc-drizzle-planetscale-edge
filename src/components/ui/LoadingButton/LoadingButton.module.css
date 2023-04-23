@@ -1,0 +1,3 @@
+.loading {
+  @apply flex gap-2 items-center justify-center;
+}
