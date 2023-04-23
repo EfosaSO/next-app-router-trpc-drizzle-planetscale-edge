@@ -16,31 +16,31 @@ type Props = Pick<
 
 export default function PublicVoidCard(props: Props) {
   return (
-    <div className="border dark:border-stone-700 rounded p-4">
-      <div className="space-y-2">
-        <Link href={props.href}>
+    <Link href={props.href}>
+      <div className="border dark:border-stone-700 rounded p-4">
+        <div className="space-y-2">
           <section>
             <H3>{props.title}</H3>
             <P className="line-clamp-2">{formatDate(props.startDate)}</P>
             <P className="line-clamp-2">{props.description}</P>
           </section>
-        </Link>
-        <section className="flex items-center justify-between">
-          <section className="space-x-2">
-            {props.requirements!.map(
-              (requirement, index) =>
-                index < 3 && (
-                  <p
-                    key={requirement.id}
-                    className="line-clamp-1 bg-gray-800 rounded-full text-xs inline-flex px-4 py-2"
-                  >
-                    {requirement.title}
-                  </p>
-                )
-            )}
+          <section className="flex items-center justify-between">
+            <section className="space-x-2">
+              {props.requirements!.map(
+                (requirement, index) =>
+                  index < 3 && (
+                    <p
+                      key={requirement.id}
+                      className="line-clamp-1 bg-gray-800 rounded-full text-xs inline-flex px-4 py-2"
+                    >
+                      {requirement.title}
+                    </p>
+                  )
+              )}
+            </section>
           </section>
-        </section>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
