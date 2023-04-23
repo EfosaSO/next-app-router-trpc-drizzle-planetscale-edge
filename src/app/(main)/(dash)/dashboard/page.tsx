@@ -43,20 +43,22 @@ export default async function Page() {
                 </section>
               </section>
               {organisation.locations.length > 0 && (
-                <section className="flex gap-4 md:gap-0 justify-between items-center md:items-start md:flex-col">
+                <section className="flex gap-4 md:gap-2 justify-between items-center md:items-start md:flex-col">
                   <section>
                     <H6>Main location</H6>
-                    <address>{organisation.locations[0]!.address}</address>
-                    {organisation.locations[0]?.phone && (
-                      <a href={`tel:${organisation.locations[0].phone}`}>
-                        <P>{organisation.locations[0].phone}</P>
-                      </a>
-                    )}
-                    {organisation.locations[0]?.email && (
-                      <a href={`mailto:${organisation.locations[0].email}`}>
-                        <P>{organisation.locations[0].email}</P>
-                      </a>
-                    )}
+                    <section className=" grid">
+                      <address>{organisation.locations[0]!.address}</address>
+                      {organisation.locations[0]?.phone && (
+                        <a href={`tel:${organisation.locations[0].phone}`}>
+                          <P>{organisation.locations[0].phone}</P>
+                        </a>
+                      )}
+                      {organisation.locations[0]?.email && (
+                        <a href={`mailto:${organisation.locations[0].email}`}>
+                          <P>{organisation.locations[0].email}</P>
+                        </a>
+                      )}
+                    </section>
                   </section>
                   <section>
                     <EditLocation {...organisation.locations[0]!} />
