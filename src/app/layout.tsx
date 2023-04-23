@@ -2,6 +2,7 @@ import { Nunito } from "next/font/google";
 import Link from "next/link";
 import { UserButton, currentUser } from "@clerk/nextjs/app-beta";
 import { Home } from "lucide-react";
+import { Button } from "~/components/ui/button";
 import { siteConfig } from "~/config/site";
 import { cn } from "~/lib/utils";
 
@@ -88,7 +89,13 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                     <Home />
                   </Link>
                   <div className="flex gap-6 items-center">
-                    <UserButton afterSignOutUrl="/" />
+                    {user ? (
+                      <UserButton afterSignOutUrl="/" />
+                    ) : (
+                      <Button variant="ghost" href="/dashboard">
+                        Login
+                      </Button>
+                    )}
                   </div>
                 </div>
               </section>
