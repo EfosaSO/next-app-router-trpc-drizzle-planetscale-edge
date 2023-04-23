@@ -7,6 +7,7 @@ import { Building, ExternalLink, Mail, Phone } from "lucide-react";
 import { H1, H3, H6, P } from "~/components/typography";
 import { Button } from "~/components/ui/button";
 import { api } from "~/lib/api/server";
+import { formatDate } from "~/lib/utils";
 
 export default async function Page({
   params: { slug, voidSlugId },
@@ -83,7 +84,10 @@ export default async function Page({
                 <address>{foundVoid.location?.address}</address>
               )}
             </section>
-            <p className="line-clamp-2">{foundVoid.description}</p>
+            <P>
+              Available: <strong>{formatDate(foundVoid.startDate!)}</strong>
+            </P>
+            <P>{foundVoid.description}</P>
           </section>
           <section className="grid gap-2">
             <H3>Requirements</H3>

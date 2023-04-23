@@ -81,7 +81,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <main className="min-h-screen">
             {/* @ts-ignore */}
             <Header />
-            <section className="container pt-20">{children}</section>
+            <section className="container py-20">{children}</section>
           </main>
           <footer className="bg-gradient-to-l from-rose-100 to-teal-100 dark:from-rose-100/80 dark:to-teal-100/80 text-stone-900">
             <div className="grid md:flex container md:items-center md:justify-between gap-2 md:gap-4 py-3 md:py-6 text-sm">

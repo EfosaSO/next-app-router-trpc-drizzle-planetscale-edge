@@ -2,6 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-hs: 0 0 100%;
+  --secondary-hs: 190 40%;
+
+  --aside-width: 330px;
+
+  /* Light styles */
+  --l-0: 0%;
+  --l-10: 10%;
+  --l-20: 20%;
+  --l-30: 30%;
+  --l-40: 40%;
+  --l-50: 50%;
+  --l-60: 60%;
+  --l-70: 70%;
+  --l-80: 80%;
+  --l-90: 90%;
+  --l-100: 100%;
+
+  --green: green;
+  --background: hsl(0, 0%, var(--l-90), 1);
+  --background-secondary: hsl(0, 0%, var(--l-80), 1);
+  --background-hover: hsl(0, 0%, var(--l-70), 1);
+  --border: hsl(0 0% var(--l-70));
+  --text: hsl(0 0% var(--l-0));
+  --text-lighter: hsl(0 0% var(--l-30));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --l-0: 100%;
+    --l-10: 90%;
+    --l-20: 80%;
+    --l-30: 70%;
+    --l-40: 60%;
+    --l-50: 50%;
+    --l-60: 40%;
+    --l-70: 30%;
+    --l-80: 20%;
+    --l-90: 10%;
+    --l-100: 0%;
+
+    --green: #0c6;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
 html,
 body,
 :root {

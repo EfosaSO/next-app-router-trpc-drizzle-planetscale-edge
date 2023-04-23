@@ -6,15 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import cuid from "cuid";
 import { Loader2 } from "lucide-react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import Modal from "~/components/ui/Modal/Modal";
 import { Button } from "~/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "~/components/ui/dialog";
 import { Field } from "~/components/ui/field";
 import { Label } from "~/components/ui/label";
@@ -81,103 +79,102 @@ export default function CreateVoid() {
   }, [open, reset]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>Create Void</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl">
-        <form onSubmit={handleSubmit(handleCreate)}>
-          <DialogHeader>
-            <DialogTitle>Create Void</DialogTitle>
-            <DialogDescription>
-              {`Fill in the details of your void and click save when you're done.`}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-scroll px-6">
-            <div className="grid gap-3">
-              <Controller
-                name="title"
-                control={control}
-                render={({ field: { ref, ...field } }) => (
-                  <Field control={control} {...field} baseRef={ref} />
-                )}
-              />
-            </div>
-            <div className="grid gap-3">
-              <Controller
-                name="startDate"
-                control={control}
-                render={({ field: { ref, ...field } }) => (
-                  <Field control={control} {...field} baseRef={ref} />
-                )}
-              />
-            </div>
-            <div className="grid gap-3">
-              <Controller
-                name="locationId"
-                control={control}
-                render={({ field: { ref, ...field } }) => (
-                  <Field
-                    control={control}
-                    {...field}
-                    baseRef={ref}
-                    className="min-h-[200px]"
-                  />
-                )}
-              />
-            </div>
-            <div className="grid gap-3">
-              <Controller
-                name="description"
-                control={control}
-                render={({ field: { ref, ...field } }) => (
-                  <Field
-                    control={control}
-                    {...field}
-                    baseRef={ref}
-                    className="min-h-[200px]"
-                  />
-                )}
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="space-y-2">
-                <Label>Requirements (Required)</Label>
-                {requirements.map(({ localId, ...requirement }, index) => (
-                  <RequirementField
-                    key={localId}
-                    requirement={{
-                      ...requirement,
-                      localId,
-                    }}
-                    control={control}
-                    isLast={requirements.length === index + 1}
-                    onRemove={() => removeRequirement(index)}
-                    onAdd={addRequirement}
-                    name={`requirements.${index}`}
-                  />
-                ))}
-              </div>
-              {requirements.length === 0 && (
-                <Button
-                  type="button"
-                  onClick={addRequirement}
-                  variant="subtle"
-                  size="sm"
-                >
-                  Add requirement
-                </Button>
+    <Modal
+      showModal={open}
+      setShowModal={setOpen}
+      content={<Button size="sm">Create Void</Button>}
+    >
+      <form onSubmit={handleSubmit(handleCreate)}>
+        <DialogHeader className="text-left">
+          <DialogTitle>Create Void</DialogTitle>
+          <DialogDescription>
+            {`Fill in the details of your void and click save when you're done.`}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4 max-h-[50vh] md:max-h-[70vh] overflow-y-scroll px-6">
+          <div className="grid gap-3">
+            <Controller
+              name="title"
+              control={control}
+              render={({ field: { ref, ...field } }) => (
+                <Field control={control} {...field} baseRef={ref} />
               )}
-            </div>
+            />
           </div>
-          <DialogFooter>
-            <Button type="submit">
-              Save note
-              {isLoading && <Loader2 className="animate-spin ml-2 w-4" />}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+          <div className="grid gap-3">
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field: { ref, ...field } }) => (
+                <Field control={control} {...field} baseRef={ref} />
+              )}
+            />
+          </div>
+          <div className="grid gap-3">
+            <Controller
+              name="locationId"
+              control={control}
+              render={({ field: { ref, ...field } }) => (
+                <Field
+                  control={control}
+                  {...field}
+                  baseRef={ref}
+                  className="min-h-[200px]"
+                />
+              )}
+            />
+          </div>
+          <div className="grid gap-3">
+            <Controller
+              name="description"
+              control={control}
+              render={({ field: { ref, ...field } }) => (
+                <Field
+                  control={control}
+                  {...field}
+                  baseRef={ref}
+                  className="min-h-[200px]"
+                />
+              )}
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="space-y-2">
+              <Label>Requirements (Required)</Label>
+              {requirements.map(({ localId, ...requirement }, index) => (
+                <RequirementField
+                  key={localId}
+                  requirement={{
+                    ...requirement,
+                    localId,
+                  }}
+                  control={control}
+                  isLast={requirements.length === index + 1}
+                  onRemove={() => removeRequirement(index)}
+                  onAdd={addRequirement}
+                  name={`requirements.${index}`}
+                />
+              ))}
+            </div>
+            {requirements.length === 0 && (
+              <Button
+                type="button"
+                onClick={addRequirement}
+                variant="subtle"
+                size="sm"
+              >
+                Add requirement
+              </Button>
+            )}
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="submit">
+            Save note
+            {isLoading && <Loader2 className="animate-spin ml-2 w-4" />}
+          </Button>
+        </DialogFooter>
+      </form>
+    </Modal>
   );
 }

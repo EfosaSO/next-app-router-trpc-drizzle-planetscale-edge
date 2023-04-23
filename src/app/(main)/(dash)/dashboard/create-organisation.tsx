@@ -7,15 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import cuid from "cuid";
 import { Loader2 } from "lucide-react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import Modal from "~/components/ui/Modal";
 import { Button } from "~/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "~/components/ui/dialog";
 import { Field } from "~/components/ui/field";
 import { Label } from "~/components/ui/label";
@@ -78,70 +76,69 @@ export default function CreateOrganisation() {
 
   return (
     <>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button>Create Organisation</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-2xl">
-          <form onSubmit={handleSubmit(handleCreate)}>
-            <DialogHeader>
-              <DialogTitle>Create Organisation</DialogTitle>
-              <DialogDescription>
-                {`Fill in the details of your organisation and click save when you're done.`}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-3">
-                <Controller
-                  name="name"
-                  control={control}
-                  render={({ field }) => <Field control={control} {...field} />}
-                />
-                <Controller
-                  name="slug"
-                  control={control}
-                  render={({ field }) => <Field control={control} {...field} />}
-                />
-              </div>
-              <div className="">
-                <div className="space-y-2">
-                  <Label>Locations (Required)</Label>
-                  {locations.map(({ localId, ...location }, index) => (
-                    <LocationAddressField
-                      key={localId}
-                      location={{
-                        ...location,
-                        localId,
-                      }}
-                      control={control}
-                      isLast={locations.length === index + 1}
-                      onRemove={() => removeLocation(index)}
-                      onAdd={addLocation}
-                      name={`locations.${index}`}
-                    />
-                  ))}
-                </div>
-                {locations.length === 0 && (
-                  <Button
-                    type="button"
-                    onClick={addLocation}
-                    variant="subtle"
-                    size="sm"
-                  >
-                    Add location
-                  </Button>
-                )}
-              </div>
+      <Modal
+        showModal={open}
+        setShowModal={setOpen}
+        content={<Button size="sm">Create Organisation</Button>}
+      >
+        <form onSubmit={handleSubmit(handleCreate)}>
+          <DialogHeader>
+            <DialogTitle>Create Organisation</DialogTitle>
+            <DialogDescription>
+              {`Fill in the details of your organisation and click save when you're done.`}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-3">
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => <Field control={control} {...field} />}
+              />
+              <Controller
+                name="slug"
+                control={control}
+                render={({ field }) => <Field control={control} {...field} />}
+              />
             </div>
-            <DialogFooter>
-              <Button type="submit">
-                Save organisation
-                {isLoading && <Loader2 className="animate-spin ml-2 w-4" />}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+            <div className="">
+              <div className="space-y-2">
+                <Label>Locations (Required)</Label>
+                {locations.map(({ localId, ...location }, index) => (
+                  <LocationAddressField
+                    key={localId}
+                    location={{
+                      ...location,
+                      localId,
+                    }}
+                    control={control}
+                    isLast={locations.length === index + 1}
+                    onRemove={() => removeLocation(index)}
+                    onAdd={addLocation}
+                    name={`locations.${index}`}
+                  />
+                ))}
+              </div>
+              {locations.length === 0 && (
+                <Button
+                  type="button"
+                  onClick={addLocation}
+                  variant="subtle"
+                  size="sm"
+                >
+                  Add location
+                </Button>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="submit">
+              Save organisation
+              {isLoading && <Loader2 className="animate-spin ml-2 w-4" />}
+            </Button>
+          </DialogFooter>
+        </form>
+      </Modal>
       <Script id="voids-google-maps" async defer src={PLACES_API_URL} />
     </>
   );

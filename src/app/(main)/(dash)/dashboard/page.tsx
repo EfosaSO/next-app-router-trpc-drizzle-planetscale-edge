@@ -15,7 +15,7 @@ export default async function Page() {
   const voids = await api.voids.getCurrentUserVoids.fetch();
   return (
     <>
-      <section className="mb-5 flex items-center justify-between">
+      <section className="flex items-center justify-between">
         <section className="space-y-2">
           {organisation ? (
             <section className="space-y-4">
@@ -25,6 +25,7 @@ export default async function Page() {
                     {organisation.name} organisation
                     <section className="">
                       <Button
+                        // @ts-ignore
                         href={`/organisation/${organisation.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -92,11 +93,12 @@ export default async function Page() {
                 <H3>Your voids</H3>
                 {organisation && <CreateVoid />}
               </section>
-              <div className="grid md:grid-cols-3 gap-4">
+              <div className="grid gap-4">
                 {voids.map((item) => (
                   <VoidCard
                     key={item.id}
                     {...item}
+                    // @ts-ignore
                     href={`/organisation/${organisation.slug}/${item.slug}-${item.id}`}
                   />
                 ))}

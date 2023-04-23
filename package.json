@@ -43,6 +43,8 @@
     "cuid": "^3.0.0",
     "date-fns": "^2.29.3",
     "drizzle-orm": "^0.23.13",
+    "focus-trap-react": "^10.1.1",
+    "framer-motion": "^10.12.4",
     "lucide-react": "^0.145.0",
     "micro": "^10.0.1",
     "mysql2": "^3.2.3",

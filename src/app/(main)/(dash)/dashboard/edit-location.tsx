@@ -7,15 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { isValid } from "zod";
+import Modal from "~/components/ui/Modal/Modal";
 import { Button } from "~/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "~/components/ui/dialog";
 import { Field } from "~/components/ui/field";
 import { env } from "~/env.mjs";
@@ -59,43 +57,44 @@ export default function EditLocation(props: EditLocationResponse) {
 
   return (
     <>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button variant="subtle" size="sm">
+      <Modal
+        showModal={open}
+        setShowModal={setOpen}
+        content={
+          <Button variant="outline" size="sm">
             Edit
           </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-2xl">
-          <form onSubmit={handleSubmit(handleCreate)}>
-            <DialogHeader>
-              <DialogTitle>Edit Location</DialogTitle>
-              <DialogDescription>
-                {`Edit your location and click save when you're done.`}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-scroll px-6">
-              {Object.keys(props)
-                .filter((name) => name !== "id")
-                .map((name) => (
-                  <Controller
-                    key={name}
-                    name={name as keyof typeof props}
-                    control={control}
-                    render={({ field: { ref, ...field } }) => (
-                      <Field control={control} {...field} baseRef={ref} />
-                    )}
-                  />
-                ))}
-            </div>
-            <DialogFooter>
-              <Button type="submit" disabled={!isValid}>
-                Save location
-                {isLoading && <Loader2 className="animate-spin ml-2 w-4" />}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+        }
+      >
+        <form onSubmit={handleSubmit(handleCreate)}>
+          <DialogHeader>
+            <DialogTitle>Edit Location</DialogTitle>
+            <DialogDescription>
+              {`Edit your location and click save when you're done.`}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-scroll px-6">
+            {Object.keys(props)
+              .filter((name) => name !== "id")
+              .map((name) => (
+                <Controller
+                  key={name}
+                  name={name as keyof typeof props}
+                  control={control}
+                  render={({ field: { ref, ...field } }) => (
+                    <Field control={control} {...field} baseRef={ref} />
+                  )}
+                />
+              ))}
+          </div>
+          <DialogFooter>
+            <Button type="submit" disabled={!isValid}>
+              Save location
+              {isLoading && <Loader2 className="animate-spin ml-2 w-4" />}
+            </Button>
+          </DialogFooter>
+        </form>
+      </Modal>
       <Script id="voids-google-maps" async defer src={PLACES_API_URL} />
     </>
   );
