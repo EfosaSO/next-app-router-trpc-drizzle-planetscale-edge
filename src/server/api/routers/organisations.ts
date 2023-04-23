@@ -5,6 +5,7 @@ import {
   createOrganisationWithLocationSchema,
   organisationSchema,
 } from "~/lib/interfaces";
+import { revalidate } from "~/lib/revalidate";
 import { slugify } from "~/lib/utils";
 import {
   createTRPCRouter,
@@ -93,6 +94,15 @@ export const organisationsRouter = createTRPCRouter({
         }, [] as (Void & { requirements: Requirement[] })[]),
       };
     }),
+  getOrganisations: publicProcedure.query(async ({ ctx: { db } }) => {
+    const data = await db.organisation.findMany({
+      select: {
+        slug: true,
+      },
+    });
+
+    return data;
+  }),
   getCurrentUserOrganisation: protectedProcedure.query(
     async ({ ctx: { auth, db } }) => {
       const customer = await db.customer.findUnique({
@@ -221,6 +231,8 @@ export const organisationsRouter = createTRPCRouter({
           id: input.id,
         },
       });
+
+      await revalidate([`/organisation/${result.slug}`]);
       return result;
     }),
   editOrganisation: protectedProcedure
@@ -235,6 +247,7 @@ export const organisationsRouter = createTRPCRouter({
           slug: slugify(input.name),
         },
       });
+      await revalidate([`/organisation/${result.slug}`]);
       return result;
     }),
 });

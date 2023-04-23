@@ -8,6 +8,7 @@ const server = z.object({
   DB_PASSWORD: z.string().min(1),
   DATABASE_URL: z.string().min(1),
   WEBHOOK_SECRET: z.string().min(1),
+  API_SECRET: z.string().min(1),
 })
 
 const client = z.object({
@@ -34,6 +35,7 @@ const processEnv = {
   DB_PASSWORD: process.env.DB_PASSWORD,
   DATABASE_URL: process.env.DATABASE_URL,
   WEBHOOK_SECRET: process.env.WEBHOOK_SECRET,
+  API_SECRET: process.env.API_SECRET,
 }
 
 // Don't touch the part below

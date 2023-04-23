@@ -1,6 +1,19 @@
 import { H1, H3 } from "~/components/typography";
 import PublicVoidCard from "~/components/ui/public-void-card";
 import { api } from "~/lib/api/server";
+import { prisma } from "~/server/prisma";
+
+export async function generateStaticParams() {
+  const organisations = await prisma.organisation.findMany({
+    select: {
+      slug: true,
+    },
+  });
+
+  return organisations.map((org) => ({
+    slug: org.slug,
+  }));
+}
 
 export default async function Page({
   params: { slug },
@@ -27,6 +40,7 @@ export default async function Page({
             <PublicVoidCard
               key={item.id}
               {...item}
+              // @ts-ignore
               href={`/organisation/${organisation.slug}/${item.slug}-${item.id}`}
             />
           ))}

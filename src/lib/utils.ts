@@ -27,6 +27,7 @@ export function slugify(string: string) {
 }
 
 export const isProduction = process.env.NODE_ENV === "production";
+export const getProtocol = () => (isProduction ? "https://" : "http://");
 
 export const getChangedValues = <T extends object, K extends keyof T>(
   values: T,
@@ -53,4 +54,51 @@ export const getChangedValues = <T extends object, K extends keyof T>(
   });
 
   return newValues;
+};
+
+const errorMessage = (
+  value: undefined | string | { [key: string]: string }
+): string | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  return (
+    errorMessage(value.message) ||
+    (Array.isArray(value.message) && errorMessage(value.message[0])) ||
+    errorMessage(value.errorMessageDetails) ||
+    errorMessage(value.errorMessage) ||
+    errorMessage(value.errorDescription) ||
+    errorMessage(value.statusText)
+  );
+};
+
+export const pluckErrorMessage = (
+  error: any,
+  fallback: string = "Unknown communication error"
+) => {
+  if (typeof error === "string") {
+    return error;
+  }
+  if (error?.message) {
+    return error.message;
+  }
+  if (error?.fields) {
+    return error;
+  }
+  if (error?.permissions) {
+    return error;
+  }
+
+  const data = error.response?.data;
+
+  if (!data) {
+    return error.response?.statusText || fallback;
+  }
+
+  return errorMessage(data) || error.response?.statusText || fallback;
 };

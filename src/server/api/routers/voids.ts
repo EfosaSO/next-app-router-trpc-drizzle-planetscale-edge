@@ -6,6 +6,7 @@ import {
   createVoidWithRequirementsSchema,
   editVoidSchema,
 } from "~/lib/interfaces";
+import { revalidate } from "~/lib/revalidate";
 import { slugify } from "~/lib/utils";
 import {
   createTRPCRouter,
@@ -191,7 +192,21 @@ export const voidsRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+        include: {
+          location: {
+            include: {
+              organisation: {
+                select: {
+                  slug: true,
+                },
+              },
+            },
+          },
+        },
       });
+      await revalidate([
+        `/organisation/${result.location.organisation.slug}/${result.slug}-${result.id}`,
+      ]);
       return result;
     }),
   editVoid: protectedProcedure
@@ -266,7 +281,21 @@ export const voidsRouter = createTRPCRouter({
             },
           }),
         },
+        include: {
+          location: {
+            include: {
+              organisation: {
+                select: {
+                  slug: true,
+                },
+              },
+            },
+          },
+        },
       });
+      await revalidate([
+        `/organisation/${result.location.organisation.slug}/${result.slug}-${result.id}`,
+      ]);
       return result;
     }),
 });

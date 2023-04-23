@@ -16,12 +16,14 @@ type Props = Pick<
 
 export default function PublicVoidCard(props: Props) {
   return (
-    <Link href={props.href}>
-      <div className="border dark:border-stone-700 rounded p-4">
+    <div className="border dark:border-stone-700 rounded p-4">
+      <Link href={props.href}>
         <div className="space-y-2">
           <section>
             <H3>{props.title}</H3>
-            <P className="line-clamp-2">{formatDate(props.startDate)}</P>
+            <P className="line-clamp-2">
+              Available: {formatDate(props.startDate)}
+            </P>
             <P className="line-clamp-2">{props.description}</P>
           </section>
           <section className="flex items-center justify-between">
@@ -40,7 +42,7 @@ export default function PublicVoidCard(props: Props) {
             </section>
           </section>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
