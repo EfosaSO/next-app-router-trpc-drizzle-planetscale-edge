@@ -3,7 +3,7 @@ import { useController, useWatch } from "react-hook-form";
 import { api } from "~/lib/api/client";
 import { slugify } from "~/lib/utils";
 
-import { FieldProps } from "./field";
+import type { FieldProps } from "./field";
 import { Input } from "./input";
 
 type Props = Pick<FieldProps<any>, "control" | "name" | "onError"> & {
@@ -12,6 +12,7 @@ type Props = Pick<FieldProps<any>, "control" | "name" | "onError"> & {
 
 const SlugInputField = React.forwardRef<HTMLInputElement, Props>(
   ({ className, control, onError, ...props }, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const nameField = useWatch({ name: "name", control });
     const { field } = useController({
       name: props.name,
@@ -22,6 +23,7 @@ const SlugInputField = React.forwardRef<HTMLInputElement, Props>(
 
     api.organisations.checkOrganisationSlug.useQuery(
       {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         slug: field.value,
       },
       {
@@ -42,6 +44,7 @@ const SlugInputField = React.forwardRef<HTMLInputElement, Props>(
         field.onChange?.({
           target: {
             name: field.name,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             value: slugify(nameField),
           },
         });

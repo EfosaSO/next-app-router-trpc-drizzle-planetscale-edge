@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { clsx, type ClassValue } from "clsx";
 import { equals } from "ramda";
 import slugifyjs from "slugify";

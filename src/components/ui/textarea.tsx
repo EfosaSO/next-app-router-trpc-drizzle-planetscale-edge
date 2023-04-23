@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "~/lib/utils";
 
-import { FieldProps } from "./field";
+import type { FieldProps } from "./field";
 
 export type TextareaProps = Omit<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,

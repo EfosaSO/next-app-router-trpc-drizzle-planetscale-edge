@@ -253,7 +253,7 @@ export const voidsRouter = createTRPCRouter({
               },
               requirement: {
                 create: {
-                  title: requirement.title!,
+                  title: requirement.title,
                 },
               },
             },

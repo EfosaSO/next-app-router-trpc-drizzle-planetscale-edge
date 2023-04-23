@@ -1,6 +1,6 @@
 "use client";
 
-import { LinkProps } from "next/link";
+import { type LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import { Link, Loader2 } from "lucide-react";
 import { H3 } from "~/components/typography";
@@ -20,7 +20,7 @@ type Props = Pick<
   | "requirements"
   | "fulfilled"
 > & {
-  href: LinkProps<{}>["href"];
+  href: LinkProps<object>["href"];
 };
 
 export default function VoidCard(props: Props) {

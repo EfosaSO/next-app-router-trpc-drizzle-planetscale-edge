@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import Image from "next/image";
 import Link from "next/link";
 import { H1, H3, H6, P } from "~/components/typography";
@@ -18,6 +19,10 @@ export default async function Page({
   const foundVoid = await api.voids.getVoidById.fetch({
     id: voidId,
   });
+
+  if (!foundVoid) {
+    return <div>404</div>;
+  }
 
   const email = {
     subject: `Referral for ${foundVoid.name}`,

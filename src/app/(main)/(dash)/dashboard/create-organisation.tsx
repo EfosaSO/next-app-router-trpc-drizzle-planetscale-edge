@@ -7,8 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import cuid from "cuid";
 import { Loader2 } from "lucide-react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { isValid } from "zod";
-import { Button } from "~/components/ui/button";
+import { Button } from "~/components/ui/Button";
 import {
   Dialog,
   DialogContent,
@@ -27,8 +26,8 @@ import {
 import { env } from "~/env.mjs";
 import { api } from "~/lib/api/client";
 import {
-  CreateOrganisationWithLocationResponse,
   createOrganisationWithLocationSchema,
+  type CreateOrganisationWithLocationResponse,
 } from "~/lib/interfaces";
 
 const PLACES_API_URL = `https://maps.googleapis.com/maps/api/js?key=${env.NEXT_PUBLIC_GOOGLE_PLACES_KEY}&libraries=places`;
@@ -135,7 +134,7 @@ export default function CreateOrganisation() {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit" disabled={!isValid}>
+              <Button type="submit">
                 Save organisation
                 {isLoading && <Loader2 className="animate-spin ml-2 w-4" />}
               </Button>

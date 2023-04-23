@@ -1,4 +1,5 @@
-import { forwardRef } from 'react';
+import { forwardRef } from "react";
+import { cn } from "~/lib/utils";
 
 export interface IconProps {
   width?: number | string;
@@ -16,7 +17,7 @@ const Spinner = forwardRef<SVGSVGElement, IconProps>(
         role="presentation"
         width={width}
         height={height}
-        className={`spinner animate-spin icon ${className}`}
+        className={cn("spinner animate-spin icon", className)}
         fill="none"
         viewBox="0 0 24 24"
       >
@@ -37,6 +38,6 @@ const Spinner = forwardRef<SVGSVGElement, IconProps>(
     );
   }
 );
-Spinner.displayName = 'Spinner';
+Spinner.displayName = "Spinner";
 
 export default Spinner;

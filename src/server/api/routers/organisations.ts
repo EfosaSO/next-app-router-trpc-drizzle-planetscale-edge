@@ -1,4 +1,4 @@
-import { Requirement, Void } from "@prisma/client";
+import type { Requirement, Void } from "@prisma/client";
 import { z } from "zod";
 import {
   createOrganisationSchema,
@@ -82,7 +82,7 @@ export const organisationsRouter = createTRPCRouter({
     async ({ ctx: { auth, db } }) => {
       const customer = await db.customer.findUnique({
         where: {
-          userId: auth.userId,
+          userId: auth?.userId ?? "",
         },
       });
       const data = db.organisation.findUnique({
@@ -111,7 +111,7 @@ export const organisationsRouter = createTRPCRouter({
     .query(async ({ ctx: { auth, db }, input }) => {
       const customer = await db.customer.findUnique({
         where: {
-          userId: auth.userId,
+          userId: auth?.userId ?? "",
         },
       });
       const data = db.requirementsOnVoids.findMany({
@@ -139,7 +139,7 @@ export const organisationsRouter = createTRPCRouter({
     .query(async ({ ctx: { auth, db }, input }) => {
       const customer = await db.customer.findUnique({
         where: {
-          userId: auth.userId,
+          userId: auth?.userId ?? "",
         },
       });
       const data = db.location.findMany({
@@ -165,7 +165,7 @@ export const organisationsRouter = createTRPCRouter({
           slug: slugify(input.name),
           customer: {
             connect: {
-              userId: auth.userId,
+              userId: auth?.userId ?? "",
             },
           },
         },
@@ -181,7 +181,7 @@ export const organisationsRouter = createTRPCRouter({
           slug: slugify(input.name),
           customer: {
             connect: {
-              userId: auth.userId,
+              userId: auth?.userId ?? "",
             },
           },
           locations: {

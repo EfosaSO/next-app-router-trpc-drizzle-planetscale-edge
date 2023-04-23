@@ -1,4 +1,4 @@
-import Link, { LinkProps } from "next/link";
+import Link, { type LinkProps } from "next/link";
 import { H3 } from "~/components/typography";
 import { type RouterOutputs } from "~/lib/api/types";
 
@@ -6,7 +6,7 @@ type Props = Pick<
   RouterOutputs["voids"]["getCurrentUserVoids"][0],
   "id" | "name" | "description" | "locationId" | "password" | "requirements"
 > & {
-  href: LinkProps<{}>["href"];
+  href: LinkProps<object>["href"];
 };
 
 export default function PublicVoidCard(props: Props) {

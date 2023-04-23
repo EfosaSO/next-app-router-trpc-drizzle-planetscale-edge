@@ -10,7 +10,7 @@ import {
 } from "ariakit/combobox";
 import clsx from "clsx";
 
-import Spinner from "../LoadingButton/Spinner";
+import Spinner from "../Spinner";
 import styles from "./Combobox.module.css";
 
 export type Item = {

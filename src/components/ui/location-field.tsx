@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import * as React from "react";
-import { Location } from "@prisma/client";
+import { type Location } from "@prisma/client";
 import { useController } from "react-hook-form";
 import { api } from "~/lib/api/client";
 
 import Combobox from "./Combobox/Combobox";
-import { FieldProps } from "./field";
+import { type FieldProps } from "./field";
 
 type Props = Pick<FieldProps<any>, "control" | "name">;
 

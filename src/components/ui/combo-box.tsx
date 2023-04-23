@@ -2,7 +2,7 @@ import { Fragment, forwardRef, useMemo, useState } from "react";
 import { Combobox as HCombobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
-import { FieldProps } from "./field";
+import { type FieldProps } from "./field";
 import { Input } from "./input";
 
 export type Item = {
@@ -141,5 +141,7 @@ const Combobox = forwardRef<HTMLInputElement, Props>(
     );
   }
 );
+
+Combobox.displayName = "Combobox";
 
 export default Combobox;

@@ -1,5 +1,5 @@
 import * as React from "react";
-import Link, { LinkProps } from "next/link";
+import Link, { type LinkProps } from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
 import { cn } from "~/lib/utils";
@@ -34,7 +34,7 @@ const buttonVariants = cva(
   }
 );
 
-type AnchorProps = React.AnchorHTMLAttributes<HTMLElement> & LinkProps<{}>;
+type AnchorProps = React.AnchorHTMLAttributes<HTMLElement> & LinkProps<object>;
 type ButtonProps = React.ButtonHTMLAttributes<HTMLElement>;
 
 export type MyButtonProps = AnchorProps | ButtonProps;

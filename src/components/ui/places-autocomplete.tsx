@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as React from "react";
-import { FieldPath, useController } from "react-hook-form";
+import { useController, type FieldPath } from "react-hook-form";
 import usePlacesAutocomplete, { getGeocode } from "use-places-autocomplete";
-import { CreateOrganisationWithLocationResponse } from "~/lib/interfaces";
+import { type CreateOrganisationWithLocationResponse } from "~/lib/interfaces";
 
-import Combobox, { Item } from "./combo-box";
-import { FieldProps } from "./field";
+import Combobox, { type Item } from "./combo-box";
+import { type FieldProps } from "./field";
 
 type Props = Pick<FieldProps<any>, "control" | "name">;
 
@@ -45,7 +50,7 @@ const PlacesInputField = React.forwardRef<HTMLInputElement, Props>(
       setValue(e.target.value);
     };
 
-    const handleSelect = ({ label, value }: Item) => {
+    const handleSelect = async ({ label, value }: Item) => {
       // When user selects a place, we can replace the keyword without request data from API
       // by setting the second parameter to "false"
       setValue(label, false);
@@ -63,7 +68,7 @@ const PlacesInputField = React.forwardRef<HTMLInputElement, Props>(
       });
 
       // Get latitude and longitude via utility functions
-      getGeocode({ address: label }).then((results) => {
+      await getGeocode({ address: label }).then((results) => {
         const result: GeocoderResult = results[0];
         const postCode = result.address_components.find(
           (component: { types: string[] }) =>
@@ -78,25 +83,28 @@ const PlacesInputField = React.forwardRef<HTMLInputElement, Props>(
       });
     };
 
-    const places =
-      status === "OK"
-        ? data.map((suggestion) => {
-            const { place_id, description } = suggestion;
+    const places = React.useMemo(
+      () =>
+        status === "OK"
+          ? data.map((suggestion) => {
+              const { place_id, description } = suggestion;
 
-            return {
-              label: description,
-              value: place_id,
-            };
-          })
-        : [
-            ...(placeIdField.value &&
-              addressField.value && [
-                {
-                  label: addressField.value,
-                  value: placeIdField.value,
-                },
-              ]),
-          ];
+              return {
+                label: description,
+                value: place_id,
+              };
+            })
+          : [
+              ...(placeIdField.value &&
+                addressField.value && [
+                  {
+                    label: addressField.value,
+                    value: placeIdField.value,
+                  },
+                ]),
+            ],
+      [addressField.value, data, placeIdField.value, status]
+    );
 
     React.useEffect(() => {
       if (ready) {
@@ -108,7 +116,7 @@ const PlacesInputField = React.forwardRef<HTMLInputElement, Props>(
           isInitialisedRef.current = true;
         }
       }
-    }, [places, ready, placeIdField.value, value]);
+    }, [places, ready, placeIdField.value, value, setValue]);
 
     return (
       <>
