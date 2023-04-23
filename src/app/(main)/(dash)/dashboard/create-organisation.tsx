@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import cuid from "cuid";
 import { Loader2 } from "lucide-react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { Button } from "~/components/ui/Button";
+import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
