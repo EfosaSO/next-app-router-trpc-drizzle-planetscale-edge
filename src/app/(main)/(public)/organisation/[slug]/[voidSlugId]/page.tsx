@@ -8,22 +8,6 @@ import { H1, H3, H6, P } from "~/components/typography";
 import { Button } from "~/components/ui/button";
 import { api } from "~/lib/api/server";
 import { formatDate } from "~/lib/utils";
-import { prisma } from "~/server/prisma";
-
-export const dynamic = "force-static";
-
-export async function generateStaticParams() {
-  const voids = await prisma.void.findMany({
-    select: {
-      id: true,
-      slug: true,
-    },
-  });
-
-  return voids.map((_void) => ({
-    voidSlugId: `${_void.slug}-${_void.id}`,
-  }));
-}
 
 export default async function Page({
   params: { slug, voidSlugId },
