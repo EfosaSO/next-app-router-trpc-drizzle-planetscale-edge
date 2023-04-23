@@ -3,6 +3,8 @@ import PublicVoidCard from "~/components/ui/public-void-card";
 import { api } from "~/lib/api/server";
 import { prisma } from "~/server/prisma";
 
+export const dynamic = "force-static";
+
 export async function generateStaticParams() {
   const organisations = await prisma.organisation.findMany({
     select: {
