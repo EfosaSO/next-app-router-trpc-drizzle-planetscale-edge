@@ -30,8 +30,10 @@ import { getChangedValues } from "~/lib/utils";
 export default function EditVoid(
   props: Pick<
     RouterOutputs["voids"]["getCurrentUserVoids"][0],
-    "id" | "name" | "description" | "locationId" | "password" | "requirements"
-  >
+    "id" | "title" | "description" | "locationId" | "password" | "startDate"
+  > & {
+    requirements: EditVoidResponse["requirements"];
+  }
 ) {
   const [open, setOpen] = useState(false);
 
@@ -112,7 +114,16 @@ export default function EditVoid(
           <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-scroll px-6">
             <div className="grid gap-3">
               <Controller
-                name="name"
+                name="title"
+                control={control}
+                render={({ field: { ref, ...field } }) => (
+                  <Field control={control} {...field} baseRef={ref} />
+                )}
+              />
+            </div>
+            <div className="grid gap-3">
+              <Controller
+                name="startDate"
                 control={control}
                 render={({ field: { ref, ...field } }) => (
                   <Field control={control} {...field} baseRef={ref} />

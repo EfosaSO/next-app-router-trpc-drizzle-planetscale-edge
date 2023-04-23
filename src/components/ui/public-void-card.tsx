@@ -1,12 +1,17 @@
-import Link, { type LinkProps } from "next/link";
-import { H3 } from "~/components/typography";
+import Link from "next/link";
+import { H3, P } from "~/components/typography";
 import { type RouterOutputs } from "~/lib/api/types";
+import { EditVoidResponse } from "~/lib/interfaces";
+import { formatDate } from "~/lib/utils";
+
+import { AnchorProps } from "./button";
 
 type Props = Pick<
   RouterOutputs["voids"]["getCurrentUserVoids"][0],
-  "id" | "name" | "description" | "locationId" | "password" | "requirements"
+  "id" | "title" | "description" | "locationId" | "password" | "startDate"
 > & {
-  href: LinkProps<object>["href"];
+  href: AnchorProps["href"];
+  requirements: EditVoidResponse["requirements"];
 };
 
 export default function PublicVoidCard(props: Props) {
@@ -15,13 +20,14 @@ export default function PublicVoidCard(props: Props) {
       <div className="space-y-2">
         <Link href={props.href}>
           <section>
-            <H3>{props.name}</H3>
-            <p className="line-clamp-2">{props.description}</p>
+            <H3>{props.title}</H3>
+            <P className="line-clamp-2">{formatDate(props.startDate)}</P>
+            <P className="line-clamp-2">{props.description}</P>
           </section>
         </Link>
         <section className="flex items-center justify-between">
           <section className="space-x-2">
-            {props.requirements.map(
+            {props.requirements!.map(
               (requirement, index) =>
                 index < 3 && (
                   <p

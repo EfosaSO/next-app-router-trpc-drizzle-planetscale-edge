@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import cuid from "cuid";
@@ -24,13 +24,12 @@ import {
 } from "~/components/ui/requirement-field";
 import { api } from "~/lib/api/client";
 import {
-  CreateVoidWithRequirementsResponse,
-  FormResponse,
   createVoidWithRequirementsSchema,
+  type CreateVoidWithRequirementsResponse,
 } from "~/lib/interfaces";
 
 const defaultValues = {
-  name: "",
+  title: "",
   description: "",
   locationId: "",
   requirements: [],
@@ -71,9 +70,15 @@ export default function CreateVoid() {
       },
     });
 
-  const handleCreate = (data: FormResponse) => {
-    createVoidWithRequirements(data as CreateVoidWithRequirementsResponse);
+  const handleCreate = (data: CreateVoidWithRequirementsResponse) => {
+    createVoidWithRequirements(data);
   };
+
+  useEffect(() => {
+    if (!open) {
+      reset();
+    }
+  }, [open, reset]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -91,7 +96,16 @@ export default function CreateVoid() {
           <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-scroll px-6">
             <div className="grid gap-3">
               <Controller
-                name="name"
+                name="title"
+                control={control}
+                render={({ field: { ref, ...field } }) => (
+                  <Field control={control} {...field} baseRef={ref} />
+                )}
+              />
+            </div>
+            <div className="grid gap-3">
+              <Controller
+                name="startDate"
                 control={control}
                 render={({ field: { ref, ...field } }) => (
                   <Field control={control} {...field} baseRef={ref} />

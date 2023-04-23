@@ -44,12 +44,21 @@ const LocationInputField = React.forwardRef<HTMLInputElement, Props>(
         const foundItem = locations.find(
           (location) => location.id === field.value
         );
-        if (foundItem && !query && !isInitialisedRef.current) {
-          setQuery(foundItem.address!);
-          isInitialisedRef.current = true;
+        if (foundItem) {
+          if (!query && !isInitialisedRef.current) {
+            setQuery(foundItem.address!);
+            isInitialisedRef.current = true;
+          }
+        } else if (!field.value) {
+          field.onChange?.({
+            target: {
+              name: field.name,
+              value: locations[0]?.id,
+            },
+          });
         }
       }
-    }, [locations, isLoading, field.value, query]);
+    }, [locations, isLoading, query, field]);
 
     return (
       <>

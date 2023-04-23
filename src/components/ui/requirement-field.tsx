@@ -2,14 +2,14 @@
 
 import cuid from "cuid";
 import {
-  Control,
   Controller,
-  ControllerRenderProps,
-  FieldValues,
+  type Control,
+  type ControllerRenderProps,
+  type FieldValues,
 } from "react-hook-form";
 import { Button } from "~/components/ui/button";
 import { Field } from "~/components/ui/field";
-import { Requirement } from "~/lib/interfaces";
+import { type Requirement } from "~/lib/interfaces";
 
 type Props<T extends FieldValues> = {
   requirement: Requirement & {
@@ -52,13 +52,13 @@ export function RequirementField<T extends FieldValues>({
         ))}
       </section>
       <section className="flex space-x-4">
-        <Button onClick={onRemove} variant="outline" size="sm">
-          Remove requirement
+        <Button onClick={onRemove} variant="destructive" size="sm">
+          Remove
         </Button>
 
         {isLast && (
           <Button onClick={onAdd} variant="subtle" size="sm">
-            Add another requirement
+            Add another
           </Button>
         )}
       </section>

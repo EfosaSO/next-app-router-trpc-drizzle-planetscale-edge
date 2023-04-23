@@ -1,16 +1,17 @@
 import * as React from "react";
 import { Label } from "@radix-ui/react-label";
 import {
-  Control,
-  ControllerRenderProps,
-  FieldPath,
-  FieldValues,
-  RefCallBack,
-  UseFormSetError,
   useController,
+  type Control,
+  type ControllerRenderProps,
+  type FieldPath,
+  type FieldValues,
+  type RefCallBack,
+  type UseFormSetError,
 } from "react-hook-form";
 
 import { P } from "../typography";
+import { CalendarDatePicker } from "./date-picker";
 import { Input } from "./input";
 import { LocationInputField } from "./location-field";
 import { PlacesInputField } from "./places-autocomplete";
@@ -119,6 +120,28 @@ function Field<T extends FieldValues>({
             />
           </span>
           {error && <P className="text-red-500 text-xs">{error.message}</P>}
+        </Label>
+      );
+    case "startDate":
+      return (
+        <Label className="space-y-2 w-fit">
+          <span className="text-sm capitalize">{fieldName}</span>
+          <section className="space-y-2">
+            <CalendarDatePicker
+              {...props}
+              {...field}
+              ref={baseRef}
+              onChange={(date) =>
+                field.onChange({
+                  target: {
+                    name: field.name,
+                    value: date?.toISOString() ?? "",
+                  },
+                })
+              }
+            />
+            {error && <P className="text-red-500 text-xs">{error.message}</P>}
+          </section>
         </Label>
       );
     default:

@@ -40,13 +40,28 @@ export const organisationsRouter = createTRPCRouter({
       }
     }),
   getOrganisationBySlug: publicProcedure
-    .input(z.object({ slug: z.string().optional() }))
+    .input(
+      z.object({
+        slug: z.string().optional(),
+      })
+    )
     .query(async ({ input, ctx: { db } }) => {
       const { locations, ...data } = await db.organisation.findUniqueOrThrow({
         where: {
           slug: input.slug,
         },
         include: {
+          customer: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  photo: true,
+                },
+              },
+            },
+          },
           locations: {
             include: {
               voids: {

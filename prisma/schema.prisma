@@ -73,9 +73,10 @@ model Void {
   updatedAt    DateTime              @updatedAt
   locationId   String
   fulfilled    Boolean               @default(false)
-  name         String
+  title        String
   slug         String
   description  String
+  startDate    String
   password     String?
   location     Location              @relation(fields: [locationId], references: [id], onDelete: Cascade)
   requirements RequirementsOnVoids[]

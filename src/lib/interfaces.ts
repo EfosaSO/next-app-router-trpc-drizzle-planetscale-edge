@@ -48,9 +48,10 @@ export const createOrganisationWithLocationSchema = z
   .merge(createOrganisationSchema);
 
 export const createVoidSchema = z.object({
-  name: z.string().min(1),
+  title: z.string().min(1),
   locationId: z.string().cuid(),
   description: z.string(),
+  startDate: z.string(),
   password: z.string().nullable().optional(),
 });
 
@@ -67,9 +68,10 @@ export const editVoidSchema = z
   })
   .merge(createVoidWithRequirementsSchema)
   .partial({
+    startDate: true,
     description: true,
     locationId: true,
-    name: true,
+    title: true,
     password: true,
     requirements: true,
   });

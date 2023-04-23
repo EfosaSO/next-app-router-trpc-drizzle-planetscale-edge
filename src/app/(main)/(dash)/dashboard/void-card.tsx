@@ -1,26 +1,28 @@
 "use client";
 
-import { type LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import { Link, Loader2 } from "lucide-react";
-import { H3 } from "~/components/typography";
-import { Button } from "~/components/ui/button";
+import { H3, P } from "~/components/typography";
+import { AnchorProps, Button } from "~/components/ui/button";
 import { api } from "~/lib/api/client";
 import { type RouterOutputs } from "~/lib/api/types";
+import { EditVoidResponse } from "~/lib/interfaces";
+import { formatDate } from "~/lib/utils";
 
 import EditVoid from "./edit-void";
 
 type Props = Pick<
   RouterOutputs["voids"]["getCurrentUserVoids"][0],
   | "id"
-  | "name"
+  | "title"
   | "description"
   | "locationId"
   | "password"
-  | "requirements"
   | "fulfilled"
+  | "startDate"
 > & {
-  href: LinkProps<object>["href"];
+  href: AnchorProps["href"];
+  requirements: EditVoidResponse["requirements"];
 };
 
 export default function VoidCard(props: Props) {
@@ -32,7 +34,7 @@ export default function VoidCard(props: Props) {
       <div className="space-y-2">
         <section>
           <H3 className="flex gap-2">
-            <span>{props.name}</span>
+            <span>{props.title}</span>
             {props.fulfilled && (
               <span>
                 <span className="bg-neutral-700 py-2 px-4 rounded-full text-xs">
@@ -41,11 +43,12 @@ export default function VoidCard(props: Props) {
               </span>
             )}
           </H3>
-          <p className="line-clamp-2">{props.description}</p>
+          <P className="line-clamp-2">{formatDate(props.startDate!)}</P>
+          <P className="line-clamp-2">{props.description}</P>
         </section>
         <section className="grid gap-2 md:flex items-center justify-between">
           <section className="space-x-2">
-            {props.requirements.map(
+            {props.requirements!.map(
               (requirement, index) =>
                 index < 3 && (
                   <p

@@ -20,7 +20,10 @@ import {
 import { Field } from "~/components/ui/field";
 import { env } from "~/env.mjs";
 import { api } from "~/lib/api/client";
-import { EditLocationResponse, editLocationSchema } from "~/lib/interfaces";
+import {
+  editLocationSchema,
+  type EditLocationResponse,
+} from "~/lib/interfaces";
 
 const PLACES_API_URL = `https://maps.googleapis.com/maps/api/js?key=${env.NEXT_PUBLIC_GOOGLE_PLACES_KEY}&libraries=places`;
 
@@ -52,7 +55,7 @@ export default function EditLocation(props: EditLocationResponse) {
     Object.entries(props).map(([key, value]) =>
       setValue(key as keyof EditLocationResponse, value)
     );
-  }, [props]);
+  }, [props, setValue]);
 
   return (
     <>
@@ -74,15 +77,14 @@ export default function EditLocation(props: EditLocationResponse) {
               {Object.keys(props)
                 .filter((name) => name !== "id")
                 .map((name) => (
-                  <section key={name}>
-                    <Controller
-                      name={name as keyof typeof props}
-                      control={control}
-                      render={({ field: { ref, ...field } }) => (
-                        <Field control={control} {...field} baseRef={ref} />
-                      )}
-                    />
-                  </section>
+                  <Controller
+                    key={name}
+                    name={name as keyof typeof props}
+                    control={control}
+                    render={({ field: { ref, ...field } }) => (
+                      <Field control={control} {...field} baseRef={ref} />
+                    )}
+                  />
                 ))}
             </div>
             <DialogFooter>

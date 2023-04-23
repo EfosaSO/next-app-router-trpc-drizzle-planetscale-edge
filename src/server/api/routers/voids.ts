@@ -1,5 +1,7 @@
 import { z } from "zod";
+import { AnchorProps } from "~/components/ui/button";
 import {
+  EditVoidResponse,
   createVoidSchema,
   createVoidWithRequirementsSchema,
   editVoidSchema,
@@ -27,24 +29,7 @@ export const voidsRouter = createTRPCRouter({
           id: input.id,
         },
         include: {
-          location: {
-            include: {
-              organisation: {
-                select: {
-                  customer: {
-                    include: {
-                      user: {
-                        select: {
-                          name: true,
-                          photo: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
+          location: true,
           requirements: {
             select: {
               requirement: {
@@ -102,9 +87,10 @@ export const voidsRouter = createTRPCRouter({
     });
     return data.map((_void) => ({
       ..._void,
-      requirements:
-        _void?.requirements.map(({ requirement }) => requirement) ?? [],
-      href: `/organisation/${_void.location.organisation.slug}/${_void.slug}-${_void.id}`,
+      requirements: (_void?.requirements.map(
+        ({ requirement }) => requirement
+      ) ?? []) as EditVoidResponse["requirements"],
+      href: `/organisation/${_void.location.organisation.slug}/${_void.slug}-${_void.id}` as AnchorProps["href"],
     }));
   }),
   getCurrentUserVoids: protectedProcedure.query(
@@ -149,11 +135,12 @@ export const voidsRouter = createTRPCRouter({
     .mutation(async ({ input, ctx: { db } }) => {
       const result = await db.void.create({
         data: {
-          name: input.name,
+          title: input.title,
+          startDate: input.startDate,
           locationId: input.locationId,
           description: input.description,
           password: input.password,
-          slug: slugify(input.name),
+          slug: slugify(input.title),
         },
       });
       return result;
@@ -162,7 +149,7 @@ export const voidsRouter = createTRPCRouter({
     .input(createVoidWithRequirementsSchema)
     .mutation(async ({ input, ctx: { db } }) => {
       const requirements = await db.$transaction(
-        input.requirements.map(({ id, ...requirement }) =>
+        input.requirements.map(({ id, localId, ...requirement }) =>
           db.requirement.upsert({
             where: {
               id: id ?? "",
@@ -174,11 +161,12 @@ export const voidsRouter = createTRPCRouter({
       );
       const result = await db.void.create({
         data: {
-          name: input.name,
+          title: input.title,
           locationId: input.locationId,
           description: input.description,
+          startDate: input.startDate,
           password: input.password,
-          slug: slugify(input.name),
+          slug: slugify(input.title),
           requirements: {
             create: requirements.map(({ id }) => ({
               requirement: {
@@ -261,12 +249,15 @@ export const voidsRouter = createTRPCRouter({
         ),
       ]);
 
+      const validations = editVoidSchema.safeParse(input);
+      const values = validations.success ? validations.data : {};
+
       const result = await db.void.update({
         where: {
           id: input.id,
         },
         data: {
-          ...input,
+          ...values,
           ...(input.locationId && {
             location: {
               connect: {

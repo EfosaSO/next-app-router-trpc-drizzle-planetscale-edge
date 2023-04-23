@@ -1,8 +1,9 @@
 import { Nunito } from "next/font/google";
 import Link from "next/link";
-import { UserButton, currentUser } from "@clerk/nextjs/app-beta";
+import { currentUser } from "@clerk/nextjs/app-beta";
 import { Home } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import { Menu } from "~/components/ui/menu";
 import { siteConfig } from "~/config/site";
 import { cn } from "~/lib/utils";
 
@@ -67,8 +68,7 @@ export const metadata = {
 
 type RootLayoutProps = PropsWithChildren;
 
-export default async function RootLayout({ children }: RootLayoutProps) {
-  const user = await currentUser();
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={fontSans.className}>
       <head />
@@ -79,27 +79,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       >
         <ClientProviders>
           <main className="min-h-screen">
-            <section className="fixed z-50 w-full bg-white text-black dark:bg-stone-900 dark:text-white">
-              <section className="container">
-                <div className=" flex items-center justify-between py-4 border-b dark:border-b-stone-700">
-                  <Link
-                    href={user ? "/dashboard" : "/"}
-                    className="hover:text-rose-400 underline font-semibold"
-                  >
-                    <Home />
-                  </Link>
-                  <div className="flex gap-6 items-center">
-                    {user ? (
-                      <UserButton afterSignOutUrl="/" />
-                    ) : (
-                      <Button variant="ghost" href="/dashboard">
-                        Login
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </section>
-            </section>
+            {/* @ts-ignore */}
+            <Header />
             <section className="container pt-20">{children}</section>
           </main>
           <footer className="bg-gradient-to-l from-rose-100 to-teal-100 dark:from-rose-100/80 dark:to-teal-100/80 text-stone-900">
@@ -120,5 +101,33 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         </ClientProviders>
       </body>
     </html>
+  );
+}
+
+async function Header() {
+  const user = await currentUser();
+
+  return (
+    <header className="fixed z-50 w-full bg-white text-black dark:bg-stone-900 dark:text-white">
+      <section className="container">
+        <div className=" flex items-center justify-between py-4 border-b dark:border-b-stone-700">
+          <Link
+            href="/"
+            className="hover:text-rose-400 underline font-semibold"
+          >
+            <Home />
+          </Link>
+          <div className="flex gap-6 items-center">
+            {user ? (
+              <Menu photo={user.profileImageUrl} />
+            ) : (
+              <Button variant="ghost" href="/dashboard">
+                Login
+              </Button>
+            )}
+          </div>
+        </div>
+      </section>
+    </header>
   );
 }

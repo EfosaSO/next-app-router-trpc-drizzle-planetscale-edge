@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { currentUser } from "@clerk/nextjs/app-beta";
+import { Building, ExternalLink, Mail, Phone } from "lucide-react";
 import { H1, H3, H6, P } from "~/components/typography";
 import { Button } from "~/components/ui/button";
 import { api } from "~/lib/api/server";
@@ -13,11 +14,8 @@ export default async function Page({
   params: Record<string, string>;
 }) {
   const params = voidSlugId ?? "";
-  const voidSlug = params.substring(0, params.lastIndexOf("-"));
   const voidId = params.substring(params.lastIndexOf("-") + 1);
-  const organisation = await api.organisations.getOrganisationBySlug.fetch({
-    slug,
-  });
+
   const foundVoid = await api.voids.getVoidById.fetch({
     id: voidId,
   });
@@ -26,9 +24,16 @@ export default async function Page({
     return <div>404</div>;
   }
 
+  const user = await currentUser();
+  const organisation = await api.organisations.getOrganisationBySlug.fetch({
+    slug,
+  });
+
+  const isMine = user ? organisation?.customer?.user?.id === user.id : false;
+
   const email = {
-    subject: `Referral for ${foundVoid.name}`,
-    body: `Hi, I would like to refer someone for the "${foundVoid.name}" void. Please see the details below:`,
+    subject: `Referral for ${foundVoid.title}`,
+    body: `Hi ${organisation.customer.user.name}, I would like to refer someone for the "${foundVoid.title}" void. Please see the details below:`,
   };
 
   const emailSearchParams = new URLSearchParams();
@@ -40,14 +45,19 @@ export default async function Page({
     <section className="space-y-4 pb-16">
       <section>
         <Link href={`/organisation/${organisation.slug}`} className="a">
-          <H6>{organisation.name}</H6>
+          <H6>
+            <span className="flex gap-2 items-center">
+              <Building className="w-4 h-4" />
+              {organisation.name}
+            </span>
+          </H6>
         </Link>
       </section>
       <section className="grid md:grid-cols-6 gap-8 justify-between">
         <section className="md:col-span-4 space-y-10">
           <section className="space-y-4">
             <H1 className="flex gap-2">
-              <span>{foundVoid.name}</span>
+              <span>{foundVoid.title}</span>
               {foundVoid.fulfilled && (
                 <span>
                   <span className="bg-neutral-700 py-2 px-4 rounded-full text-base tracking-normal font-normal">
@@ -62,7 +72,7 @@ export default async function Page({
                   href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${foundVoid.location.placeId}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group"
+                  className="a group"
                 >
                   <section className="flex items-center gap-2">
                     <address>{foundVoid.location?.address}</address>
@@ -96,38 +106,54 @@ export default async function Page({
           </section>
         </section>
         <section className="md:col-span-2 shadow-xl md:shadow-none sticky bottom-10 md:bottom-0 md:top-10">
-          <section className="grid gap-y-4 p-4 rounded-md bg-slate-800">
+          <section className="grid gap-y-4 p-4 md:p-6 rounded-md bg-slate-800">
             <section className="flex gap-4">
               <section>
                 <Image
                   width={100}
                   height={100}
                   className="rounded-full"
-                  alt={`${foundVoid.location?.organisation.customer.user.name}`}
-                  src={`${foundVoid.location?.organisation.customer.user.photo}`}
+                  alt={`${organisation.customer.user.name}`}
+                  src={`${organisation.customer.user.photo}`}
                 />
               </section>
               <section className="grid gap-1">
-                <P>{foundVoid.location?.organisation.customer.user.name}</P>
+                <H3>{organisation.customer.user.name}</H3>
                 {foundVoid.location?.phone && (
-                  <a href={`tel:${foundVoid.location.phone}`} className="a">
-                    <P>{foundVoid.location.phone}</P>
+                  <a
+                    href={`tel:${foundVoid.location.phone}`}
+                    className="a group"
+                  >
+                    <P>
+                      <span className="flex gap-2 items-center">
+                        <Phone className="w-4 h-4 group-hover:scale-110 custom-ease" />
+                        {foundVoid.location.phone}
+                      </span>
+                    </P>
                   </a>
                 )}
                 {foundVoid.location?.email && (
-                  <a href={`mailto:${foundVoid.location.email}`} className="a">
-                    <P>{foundVoid.location.email}</P>
+                  <a
+                    href={`mailto:${foundVoid.location.email}`}
+                    className="a group"
+                  >
+                    <P>
+                      <span className="flex gap-2 items-center">
+                        <Mail className="w-4 h-4 group-hover:scale-110 custom-ease" />
+                        {foundVoid.location.email}
+                      </span>
+                    </P>
                   </a>
                 )}
               </section>
             </section>
             <Button
+              // @ts-ignore
               href={`mailto:${
                 foundVoid.location?.email
               }?subject=${encodeURIComponent(
                 email.subject
               )}&body=${encodeURIComponent(email.body)}`}
-              anchor
             >
               <H3>Contact</H3>
             </Button>

@@ -34,7 +34,9 @@ const buttonVariants = cva(
   }
 );
 
-type AnchorProps = React.AnchorHTMLAttributes<HTMLElement> & LinkProps<object>;
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type AnchorProps = React.AnchorHTMLAttributes<HTMLElement> &
+  LinkProps<{}>;
 type ButtonProps = React.ButtonHTMLAttributes<HTMLElement>;
 
 export type MyButtonProps = AnchorProps | ButtonProps;

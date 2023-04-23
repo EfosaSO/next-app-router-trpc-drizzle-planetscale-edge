@@ -11,7 +11,7 @@ export default async function Page() {
         <section className="w-full flex justify-between md:justify-start gap-4 items-center">
           <H3>Latest voids</H3>
         </section>
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid gap-4">
           {voids.map((voidItem) => (
             <PublicVoidCard key={voidItem.id} {...voidItem} />
           ))}

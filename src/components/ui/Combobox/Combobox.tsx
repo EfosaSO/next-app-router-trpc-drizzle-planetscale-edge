@@ -83,10 +83,7 @@ const Combobox = forwardRef<HTMLInputElement, Props>(
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          show={
-            (items.length > 0 && showWithItems) ||
-            (items.length > 0 && displayValue !== "" && isFocussed)
-          }
+          show={(items.length > 0 && !!showWithItems) || items.length > 0}
           afterLeave={() => onChange(value ?? "")}
         >
           <ComboboxPopover

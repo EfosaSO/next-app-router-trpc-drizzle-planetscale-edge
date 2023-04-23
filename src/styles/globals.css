@@ -29,5 +29,5 @@ a {
 }
 
 .a {
-  @apply underline underline-offset-2 custom-ease hover:underline-offset-4;
+  @apply underline decoration-transparent underline-offset-4 custom-ease hover:decoration-white focus:decoration-white;
 }
